@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sumeet Khatri | Portfolio</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts (Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide-react@0.378.0/dist/lucide-react.js"></script>
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+    <!-- Three.js for 3D background -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* Dark background */
+            color: #d1d5db; /* Lighter text for dark mode */
+        }
+        .typing-cursor {
+            animation: blink 0.7s infinite;
+        }
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+        .glass-header {
+            background-color: rgba(17, 24, 39, 0.8); /* bg-gray-900 with 80% opacity */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        /* 3D canvas ke liye style */
+        #bg-canvas {
+            position: fixed; /* was absolute */
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1; /* Content ke peeche */
+            pointer-events: none; /* So it doesn't block clicks */
+        }
+        /* Home section ka content canvas ke upar rahe */
+        #home .container {
+            position: relative;
+            z-index: 2;
+        }
+    </style>
+</head>
+<body class="text-gray-300">
+
+    <!-- Header / Navbar -->
+    <header id="header" class="glass-header fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="text-2xl font-bold text-white">
+                    <a href="#">Sumeet Khatri</a>
+                </div>
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#home" class="text-gray-300 hover:text-indigo-400 font-medium">Home</a>
+                    <a href="#about" class="text-gray-300 hover:text-indigo-400 font-medium">About</a>
+                    <a href="#skills" class="text-gray-300 hover:text-indigo-400 font-medium">Skills</a>
+                    <a href="#projects" class="text-gray-300 hover:text-indigo-400 font-medium">Projects</a>
+                    <a href="#connect" class="text-gray-300 hover:text-indigo-400 font-medium">Connect</a>
+                </nav>
+                <button id="mobile-menu-button" class="md:hidden p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-gray-800">
+            <a href="#home" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-700">Home</a>
+            <a href="#about" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-700">About</a>
+            <a href="#skills" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-700">Skills</a>
+            <a href="#projects" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-700">Projects</a>
+            <a href="#connect" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-700">Connect</a>
+        </div>
+    </header>
+
+    <main class="pt-16">
+        <!-- Home Section -->
+        <section id="home" class="min-h-screen flex items-center bg-gray-900 relative overflow-hidden">
+            <!-- 3D Canvas Background -->
+            <canvas id="bg-canvas"></canvas>
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between">
+                <div class="md:w-1/2 text-center md:text-left mb-10 md:mb-0">
+                    <h1 class="text-4xl md:text-6xl font-bold text-white mb-4">Hi, I'm <span class="text-indigo-400">Sumeet Khatri</span></h1>
+                    <h2 class="text-2xl md:text-3xl font-medium text-gray-300 mb-6">
+                        I'm a <span id="typing-text" class="font-semibold text-indigo-400"></span><span class="typing-cursor">|</span>
+                    </h2>
+                    <p class="text-lg text-gray-400 mb-8 max-w-xl mx-auto md:mx-0">
+                        Final year B.Tech IT student and a Machine Learning Engineer with hands-on experience in building, deploying, and scaling end-to-end AI systems. Skilled in Computer Vision, MLOps, and developing Gen-AI solutions.
+                    </p>
+                    <div class="flex justify-center md:justify-start space-x-4">
+                        <a href="#connect" class="bg-indigo-600 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-indigo-700 transition duration-300">Contact Me</a>
+                        <a href="Sumeet-Khatri-final-july.pdf" download class="bg-gray-700 text-white font-semibold py-3 px-6 rounded-lg shadow-lg border border-gray-600 hover:bg-gray-600 transition duration-300">Download CV</a>
+                    </div>
+                     <div class="mt-8 flex justify-center md:justify-start space-x-6" id="social-icons">
+                        <!-- Social icons yahan render honge -->
+                    </div>
+                </div>
+                <div class="md:w-1/2 flex justify-center">
+                    <div class="w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 rounded-full overflow-hidden shadow-2xl border-8 border-gray-800">
+                        <img src="sumeet image.png" alt="Sumeet Khatri's Photo" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='https://placehold.co/400x400';">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="py-20 bg-gray-800">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-3xl md:text-4xl font-bold text-center text-white mb-12">About Me</h2>
+                <div class="flex flex-col md:flex-row items-center gap-12">
+                    <div class="md:w-2/3 text-gray-400">
+                        <p class="text-lg mb-6">
+                            I am a passionate Machine Learning Engineer and a final year B.Tech Information Technology student at Indus University. I specialize in building and deploying end-to-end AI systems, with a strong focus on MLOps, Computer Vision, and real-time model serving using technologies like FastAPI and Streamlit.
+                        </p>
+                        <p class="text-lg mb-6">
+                            My journey in AI has led me to explore the depths of Generative AI, including Langchain, Vector Databases, and building AI Agents. I have delivered impactful AI solutions, such as a credit scoring model achieving 92% AUC and a healthcare prediction system with 98% accuracy.
+                        </p>
+                         <p class="text-lg">
+                            I am driven by the challenge of solving complex problems and am always eager to learn and apply new technologies to create efficient and scalable solutions.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="py-20 bg-gray-900">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-3xl md:text-4xl font-bold text-center text-white mb-12">Technical Skills</h2>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8 text-center" id="skills-container">
+                    <!-- Skills yahan JavaScript se render honge -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="py-20 bg-gray-800">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-3xl md:text-4xl font-bold text-center text-white mb-12">My Projects</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Project Card 1 -->
+                    <div class="bg-gray-900 rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 flex flex-col">
+                        <img src="llm.png" alt="LLM Fundamentals Project" class="w-full h-48 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/400x225';">
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="text-xl font-bold text-white mb-2">LLM Fundamentals & Exploration</h3>
+                            <p class="text-gray-400 mb-4 flex-grow">Explored tokenizer pipelines, dataset preparation, pretraining objectives, and transformer architectures like BERT & GPT.</p>
+                            <div class="flex space-x-4 mt-auto">
+                                <a href="https://github.com/S1u2m3e4e5t6/Large-Language-Model-LLM-Fundamentals-Construction-Exploration" target="_blank" class="text-gray-400 hover:underline font-medium">Source Code</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Project Card 2 -->
+                    <div class="bg-gray-900 rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 flex flex-col">
+                        <img src="news summizer.png" alt="News Summarizer Project" class="w-full h-48 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/400x225';">
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="text-xl font-bold text-white mb-2">News Summarizer (NLP)</h3>
+                            <p class="text-gray-400 mb-4 flex-grow">Built an abstractive summarizer using BartForConditionalGeneration to generate concise, real-time news highlights. Deployed via Streamlit.</p>
+                            <div class="flex space-x-4 mt-auto">
+                                <a href="https://github.com/S1u2m3e4e5t6/news-summarization-tool" target="_blank" class="text-gray-400 hover:underline font-medium">Source Code</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Project Card 3 -->
+                    <div class="bg-gray-900 rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 flex flex-col">
+                        <img src="toxic.png" alt="Toxic Comment Classifier Project" class="w-full h-48 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/400x225';">
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="text-xl font-bold text-white mb-2">Toxic Comment Classifier</h3>
+                            <p class="text-gray-400 mb-4 flex-grow">Multi-label NLP model using BERT to classify toxic comments. Deployed with a real-time Streamlit interface to flag abusive language.</p>
+                            <div class="flex space-x-4 mt-auto">
+                                <a href="https://github.com/S1u2m3e4e5t6/Toxic-Comment-Classification-Web-App" target="_blank" class="text-gray-400 hover:underline font-medium">Source Code</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Project Card 4 -->
+                    <div class="bg-gray-900 rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 flex flex-col">
+                        <img src="cerdit.png" alt="Credit Risk Modeling Project" class="w-full h-48 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/400x225';">
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="text-xl font-bold text-white mb-2">Credit Risk Modeling</h3>
+                            <p class="text-gray-400 mb-4 flex-grow">Engineered a credit risk model using LightGBM, achieving 92% AUC. Incorporated Weight of Evidence (WoE) and Optuna for tuning.</p>
+                            <div class="flex space-x-4 mt-auto">
+                                <a href="https://github.com/S1u2m3e4e5t6/Credit-Risk-Modelling-Classification-" target="_blank" class="text-gray-400 hover:underline font-medium">Source Code</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Project Card 5 -->
+                    <div class="bg-gray-900 rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 flex flex-col">
+                        <img src="car.png" alt="Car Damage Detection Project" class="w-full h-48 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/400x225';">
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="text-xl font-bold text-white mb-2">Car Damage Detection</h3>
+                            <p class="text-gray-400 mb-4 flex-grow">Real-time damage assessment system using ResNet50 for multi-class image classification. Achieved 93% test accuracy.</p>
+                            <div class="flex space-x-4 mt-auto">
+                                <a href="https://github.com/S1u2m3e4e5t6/1.-Car-Damage-Detection-System-" target="_blank" class="text-gray-400 hover:underline font-medium">Source Code</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Connect Section -->
+        <section id="connect" class="py-20 bg-gray-900">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Connect With Me</h2>
+                <p class="text-lg text-gray-400 mb-12">I'm currently looking for new opportunities. Feel free to reach out!</p>
+                <div class="flex justify-center items-center space-x-8" id="connect-icons">
+                    <!-- Connect icons yahan render honge -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Add Contact Links at the End -->
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center mt-12 mb-8">
+            <h3 class="text-xl font-bold text-white mb-4">Connect With Me</h3>
+            <div class="flex justify-center space-x-8">
+                <a href="mailto:sumeetkhatri1771@gmail.com" class="text-indigo-400 hover:underline font-medium" target="_blank">Email</a>
+                <a href="https://www.linkedin.com/in/khatri-sumeet/" class="text-indigo-400 hover:underline font-medium" target="_blank">LinkedIn</a>
+                <a href="https://github.com/S1u2m3e4e5t6?tab=repositories" class="text-indigo-400 hover:underline font-medium" target="_blank">GitHub</a>
+                <a href="https://leetcode.com/u/sumeet_khatri/" class="text-indigo-400 hover:underline font-medium" target="_blank">LeetCode</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-gray-500">&copy; 2024 Sumeet Khatri. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <!-- Ek root div jahan React App render hoga -->
+    <div id="react-root"></div>
+
+    <script type="text/babel">
+        // --- React Component Definitions ---
+        const e = React.createElement;
+
+        // Lucide Icon Component (Fallback ke saath)
+        const Icon = ({ name, color = "currentColor", size = 24, className = "" }) => {
+            if (typeof window.lucide === 'undefined' || !window.lucide[name]) {
+                console.warn(`Lucide icon "${name}" nahi mila. Fallback icon 'Code' use ho raha hai.`);
+                return window.lucide ? e(window.lucide['Code'], { color, size, className }) : null;
+            }
+            const LucideIcon = window.lucide[name];
+            return e(LucideIcon, { color, size, className });
+        };
+        
+        // --- DATA (Links & Skills) ---
+        const socialLinks = [
+            { name: 'Linkedin', href: 'https://www.linkedin.com/in/sumeet-khatri-dev', icon: 'Linkedin' },
+            { name: 'Github', href: 'https://github.com/sumeet-khatri', icon: 'Github' },
+            { name: 'Kaggle', href: 'https://www.kaggle.com/sumeetkhatri', icon: 'Hexagon' },
+            { name: 'Leetcode', href: 'https://leetcode.com/u/sumeetkhatri1771/', icon: 'Code' },
+        ];
+        
+        const connectLinks = [
+            { name: 'Linkedin', href: 'https://www.linkedin.com/in/sumeet-khatri-dev', icon: 'Linkedin' },
+            { name: 'Github', href: 'https://github.com/sumeet-khatri', icon: 'Github' },
+            { name: 'Leetcode', href: 'https://leetcode.com/u/sumeetkhatri1771/', icon: 'Code' },
+            { name: 'Mail', href: 'mailto:sumeetkhatri1771@gmail.com', icon: 'Mail' },
+        ];
+        
+        const skills = [
+            { name: 'Python', icon: 'Code' }, { name: 'C++', icon: 'Code' },
+            { name: 'TensorFlow', icon: 'BrainCircuit' }, { name: 'PyTorch', icon: 'BrainCircuit' },
+            { name: 'Scikit-learn', icon: 'FunctionSquare' }, { name: 'NLP', icon: 'MessageSquare' },
+            { name: 'Transformers', icon: 'Bot' }, { name: 'Gen-AI', icon: 'Sparkles' },
+            { name: 'Langchain', icon: 'Link' }, { name: 'FastAPI', icon: 'Server' },
+            { name: 'Streamlit', icon: 'LayoutDashboard' }, { name: 'Git', icon: 'GitMerge' },
+            { name: 'PySpark', icon: 'Database' }, { name: 'MLOps', icon: 'Repeat' },
+            { name: 'System Design', icon: 'Network' }, { name: 'AI Agents', icon: 'Bot' },
+        ];
+
+        // --- REACT COMPONENTS ---
+        const SocialIcons = ({ links }) => links.map(link => 
+            e('a', { key: link.name, href: link.href, target: '_blank', rel: 'noopener noreferrer', title: link.name, className: 'text-gray-400 hover:text-indigo-400 transition-colors duration-300' }, 
+            e(Icon, { name: link.icon, size: 28 }))
+        );
+        
+        const ConnectIcons = ({ links }) => links.map(link => 
+            e('a', { key: link.name, href: link.href, target: '_blank', rel: 'noopener noreferrer', title: link.name, className: 'text-gray-400 hover:text-indigo-400 transition-transform transform hover:scale-110 duration-300' }, 
+            e(Icon, { name: link.icon, size: 40 }))
+        );
+
+        const SkillsGrid = ({ skills }) => skills.map(skill => 
+            e('div', { key: skill.name, className: 'flex flex-col items-center justify-center p-4 bg-gray-800 rounded-lg shadow-md hover:shadow-xl hover:bg-gray-700 transition-all duration-300 transform hover:-translate-y-1' }, 
+                e(Icon, { name: skill.icon, size: 40, className: 'mb-3 text-indigo-400' }),
+                e('span', { className: 'font-semibold text-gray-300 text-sm' }, skill.name)
+            )
+        );
+        
+        // --- Main App Component ---
+        // Yeh component saare dynamic parts ko manage karega
+        function App() {
+            // useEffect hook tab chalta hai jab component render ho chuka hota hai.
+            // Isse yeh sunishchit hota hai ki saare div elements (jaise 'skills-container') maujood hain.
+            React.useEffect(() => {
+                // --- React Rendering ---
+                const socialIconsContainer = document.getElementById('social-icons');
+                if (socialIconsContainer) ReactDOM.render(e(SocialIcons, { links: socialLinks }), socialIconsContainer);
+
+                const skillsContainer = document.getElementById('skills-container');
+                if (skillsContainer) ReactDOM.render(e(SkillsGrid, { skills }), skillsContainer);
+
+                const connectIconsContainer = document.getElementById('connect-icons');
+                if (connectIconsContainer) ReactDOM.render(e(ConnectIcons, { links: connectLinks }), connectIconsContainer);
+
+                // --- Typing Effect ---
+                const typingText = document.getElementById('typing-text');
+                if (typingText) {
+                    const roles = ["Machine Learning Engineer", "Gen-AI Developer", "Deep Learning Enthusiast", "AI-Agent Specialist", "Final Year Student"];
+                    let roleIndex = 0, charIndex = 0, isDeleting = false;
+                    let typeTimeout;
+
+                    function type() {
+                        const currentRole = roles[roleIndex];
+                        if (isDeleting) {
+                            typingText.textContent = currentRole.substring(0, charIndex - 1);
+                            charIndex--;
+                        } else {
+                            typingText.textContent = currentRole.substring(0, charIndex + 1);
+                            charIndex++;
+                        }
+
+                        if (!isDeleting && charIndex === currentRole.length) {
+                            typeTimeout = setTimeout(() => isDeleting = true, 2000);
+                        } else if (isDeleting && charIndex === 0) {
+                            isDeleting = false;
+                            roleIndex = (roleIndex + 1) % roles.length;
+                        }
+                        const typingSpeed = isDeleting ? 100 : 150;
+                        typeTimeout = setTimeout(type, typingSpeed);
+                    }
+                    type();
+                }
+
+                // --- Mobile Menu Toggle ---
+                const mobileMenuButton = document.getElementById('mobile-menu-button');
+                const mobileMenu = document.getElementById('mobile-menu');
+                if (mobileMenuButton && mobileMenu) {
+                    mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+                }
+
+                document.querySelectorAll('#mobile-menu a, nav a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                           mobileMenu.classList.add('hidden');
+                        }
+                    });
+                });
+                
+                // --- Header Shadow on Scroll ---
+                const header = document.getElementById('header');
+                if(header) {
+                    window.addEventListener('scroll', () => {
+                        header.classList.toggle('shadow-lg', window.scrollY > 50);
+                    });
+                }
+
+                // --- Three.js 3D Background ---
+                const homeSection = document.getElementById('home');
+                const canvas = document.getElementById('bg-canvas');
+                if(homeSection && canvas) {
+                    const scene = new THREE.Scene();
+                    const camera = new THREE.PerspectiveCamera(75, homeSection.clientWidth / homeSection.clientHeight, 0.1, 1000);
+                    const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+                    
+                    renderer.setSize(homeSection.clientWidth, homeSection.clientHeight);
+                    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+                    const particlesGeometry = new THREE.BufferGeometry;
+                    const particlesCount = 7000;
+                    const posArray = new Float32Array(particlesCount * 3);
+                    const radius = 2.2;
+
+                    for(let i = 0; i < particlesCount; i++) {
+                        const i3 = i * 3;
+                        const phi = Math.acos(-1 + (2 * i) / particlesCount);
+                        const theta = Math.sqrt(particlesCount * Math.PI) * phi;
+
+                        posArray[i3] = radius * Math.cos(theta) * Math.sin(phi);
+                        posArray[i3 + 1] = radius * Math.sin(theta) * Math.sin(phi);
+                        posArray[i3 + 2] = radius * Math.cos(phi);
+                    }
+                    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+                    const particlesMaterial = new THREE.PointsMaterial({ size: 0.006, color: 0x818cf8 });
+                    const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+                    scene.add(particlesMesh);
+                    
+                    camera.position.z = 4;
+
+                    let mouseX = 0, mouseY = 0;
+                    const onMouseMove = (event) => {
+                        mouseX = event.clientX;
+                        mouseY = event.clientY;
+                    };
+                    document.addEventListener('mousemove', onMouseMove);
+
+                    const clock = new THREE.Clock();
+                    let animationFrameId;
+                    const animate = () => {
+                        const elapsedTime = clock.getElapsedTime();
+                        particlesMesh.rotation.y = .05 * elapsedTime;
+                        
+                        const parallaxX = (mouseX / window.innerWidth - 0.5);
+                        const parallaxY = -(mouseY / window.innerHeight - 0.5);
+                        camera.position.x += (parallaxX - camera.position.x) * 0.05;
+                        camera.position.y += (parallaxY - camera.position.y) * 0.05;
+                        
+                        renderer.render(scene, camera);
+                        animationFrameId = window.requestAnimationFrame(animate);
+                    };
+                    animate();
+
+                    const onResize = () => {
+                        camera.aspect = homeSection.clientWidth / homeSection.clientHeight;
+                        camera.updateProjectionMatrix();
+                        renderer.setSize(homeSection.clientWidth, homeSection.clientHeight);
+                        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                    };
+                    window.addEventListener('resize', onResize);
+                }
+            }, []); // Khali array ka matlab hai ki yeh effect sirf ek baar chalega.
+
+            return null; // Is component ko kuch render karne ki zaroorat nahi hai.
+        }
+
+        // Main App component ko 'react-root' div mein render karein.
+        ReactDOM.render(e(App), document.getElementById('react-root'));
+    </script>
+
+</body>
+</html>
